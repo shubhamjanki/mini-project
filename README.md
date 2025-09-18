@@ -13,7 +13,7 @@ This project uses **shadcn/ui** for UI components and is tracked with Git + GitH
 ---
 
 ## 🚀 Tech Stack
-- **Frontend:** React + TypeScript  
+- **Frontend:** Nextjs + TypeScript  
 - **UI Components:** [shadcn/ui](https://ui.shadcn.com/)  
 - **Version Control:** Git + GitHub  
 
