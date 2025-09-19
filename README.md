@@ -25,6 +25,8 @@ This project uses **shadcn/ui** for UI components and is tracked with Git + GitH
 - Set up backend service integration  
 
 ---
+
+## 📅 Day 2 Progress
 🚀 Day 2 – Landing Page
 📌 What I did today
 
