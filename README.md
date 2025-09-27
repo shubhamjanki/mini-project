@@ -65,6 +65,7 @@ Full dark mode support.
 
 👉 Next up for Day 3: maybe adding features section, testimonials, or pricing cards.
 
+## 📅 Day 3 Progress
 ✅ Work Done Today
 
 Integrated Clerk authentication into the project.
