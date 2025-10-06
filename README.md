@@ -100,7 +100,7 @@ Add role-based access (e.g., Admin, User).
 
 Improve UI/UX for login and signup pages with project theme.
 
-📅 Day 4 Progress
+## 📅 Day 4 Progress
 
 🚀 Day 4 – Database Integration & Dashboard Setup
 
