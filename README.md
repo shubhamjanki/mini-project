@@ -100,6 +100,46 @@ Add role-based access (e.g., Admin, User).
 
 Improve UI/UX for login and signup pages with project theme.
 
+📅 Day 4 Progress
+
+🚀 Day 4 – Database Integration & Dashboard Setup
+
+📌 What I did today
+
+Successfully integrated Convex Database with Clerk authentication to fetch and store user details like name, image URL, and email.
+
+Also designed and implemented the Dashboard section for managing interviews.
+
+🛠️ Tech & Tools
+
+Convex (serverless database for real-time data sync)
+
+Clerk (user authentication & management)
+
+Next.js (React framework)
+
+Tailwind CSS (styling)
+
+✨ Features Added
+
+Integrated Convex schema to store user data (name, email, imageUrl).
+
+Connected Clerk user session with Convex backend for seamless user info sync.
+
+Created Dashboard UI with welcome message and dynamic user data.
+
+Added “Create Interview” button and Empty State component for future interview listings.
+
+Improved layout with responsive design and consistent styling.
+
+👉 Next Up for Day 5
+
+Implement the “Create Interview” functionality (form or modal).
+
+Display a list of existing interviews fetched from Convex.
+
+Add edit/delete options for managing interviews.
+
 
 
 ## 📂 How to Run the Project
