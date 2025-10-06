@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Outfit } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-
+import { ConvexClientProvider } from "./ConvexClientProvider";
 
 const outfit= Outfit({
 subsets:['latin']
@@ -35,7 +35,10 @@ export default function RootLayout({
         <body
           className={outfit.className}
         >
-          {children}
+          <ConvexClientProvider>
+            {children}
+          </ConvexClientProvider>
+          
         </body>
       </html>
     </ClerkProvider>
