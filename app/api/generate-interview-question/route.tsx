@@ -1,7 +1,9 @@
+import { currentUser } from "@clerk/nextjs/server";
 import axios from "axios";
 import ImageKit from "imagekit";
 import { Questrial } from "next/font/google";
 import { NextResponse } from "next/server";
+import arcjet, { tokenBucket } from "@arcjet/next"; // Add this import
 
 interface QuestionAnswer {
   question: string;
@@ -14,13 +16,46 @@ const imagekit = new ImageKit({
   urlEndpoint: process.env.IMAGEKIT_URL_ENDPOINT!,
 });
 
+// Add Arcjet configuration
+const aj = arcjet({
+  key: process.env.ARCJET_KEY!,
+  rules: [
+    tokenBucket({
+      mode: "LIVE",
+      refillRate: 5,
+      interval: 5,
+      capacity: 10  ,
+    }),
+  ],
+});
+
 export async function POST(req: Request) {
   try {
+    const user = await currentUser();
+    
+    // Check if user is authenticated
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized. Please sign in." }, { status: 401 });
+    }
+    
     const formData = await req.formData();
     const file = formData.get("file") as File;
     const jobTitle = formData.get("jobTitle") as string;
     const jobDescription = formData.get("jobDescription") as string;
-
+    
+    const decision = await aj.protect(req, {
+      userId: user.primaryEmailAddress?.emailAddress ?? user.id, // Use user.id as fallback
+      requested: 5
+    });
+    
+    console.log("Arcjet decision", decision);
+    
+    if (decision.reason && 'remaining' in decision.reason && decision.reason.remaining === 0) {
+      return NextResponse.json({
+        status: 429,
+        result: "no free credits try again after 24 hours"
+      }, { status: 429 });
+    }
     if (file) {
       
 
@@ -175,9 +210,24 @@ export async function POST(req: Request) {
       jobDescription: jobDescription
     });
     console.log(result.data);
+    
+    // Parse the questions from the response
+    let questions: QuestionAnswer[];
+    const responseText = result.data.content?.parts?.[0]?.text || result.data;
+    
+    try {
+      questions = typeof responseText === 'string' ? JSON.parse(responseText) : responseText;
+    } catch (e) {
+      console.error("Failed to parse questions:", e);
+      questions = [];
+    }
+    
     return NextResponse.json({
-      questions: result.data.content.parts[0].text,
-      resumeUrl: null 
+      success: true,
+      questions: questions,
+      resumeUrl: null,
+      jobTitle: jobTitle,  // Add this
+      jobDescription: jobDescription  // Add this
     });
   }
   

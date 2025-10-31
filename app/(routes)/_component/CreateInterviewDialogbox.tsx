@@ -40,9 +40,10 @@ function CreateInterviewDialogbox() {
       if (!files.length && !formData?.jobTitle && !formData?.jobDescription) return;
       
       console.log("User detail:", userDetail);
-      console.log("User ID:", userDetail?._id); // Changed from .id to ._id
+      console.log("User ID:", userDetail?._id);
+      console.log("Form data before submit:", formData); // Add this log
       
-      if (!userDetail?._id) { // Changed from .id to ._id
+      if (!userDetail?._id) {
         alert("You must be signed in to save interview questions");
         return;
       }
@@ -53,19 +54,22 @@ function CreateInterviewDialogbox() {
       if (files.length) uploadFormData.append('file', files[0]);
       uploadFormData.append('jobTitle', formData?.jobTitle || '');
       uploadFormData.append('jobDescription', formData?.jobDescription || '');
+      
       try {
         const res = await axios.post(
           '/api/generate-interview-question',
           uploadFormData
         );
-        console.log("File uploaded successfully", res.data);
+        console.log("API response:", res.data); // Add this log
         
         const resp = await saveInterviewQuestions({
           questions: res.data?.questions,
-          userId: userDetail._id, // Changed from .id to ._id
-          resumeUrl: res.data?.uploadInfo?.url
+          userId: userDetail._id,
+          resumeUrl: res.data?.uploadInfo?.url,
+          jobTitle: formData?.jobTitle, // Use formData directly instead of res.data
+          jobDescription: formData?.jobDescription, // Use formData directly instead of res.data
         });
-        console.log("Interview questions saved:", resp);
+        console.log("Convex save response:", resp); // Add this log
       } catch (err) {
          console.log("Error uploading file", err);
       } finally {
