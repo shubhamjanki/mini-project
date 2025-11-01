@@ -18,6 +18,8 @@ import { Loader2Icon } from 'lucide-react'
 import { useMutation } from 'convex/react'
 import { UserDetailContext } from '@/app/context/UserDetailContext'
 import { api } from '@/convex/_generated/api'
+import { useRouter } from 'next/navigation' // Changed from 'next/router'
+import { toast } from 'sonner'
 
 function CreateInterviewDialogbox() {
     const [formData, setFormData] = useState<Record<string, any>>({}) // initialize as empty object
@@ -25,6 +27,7 @@ function CreateInterviewDialogbox() {
     const [loading, setLoading] = useState<boolean>(false);
     const {userDetail, setUserDetail} = useContext(UserDetailContext);
     const saveInterviewQuestions = useMutation(api.Interview.SaveInterviewQuestion)
+    const router = useRouter() // Now using App Router's useRouter
     
     function onHandleInputChange(field: string, data: any) {
         setFormData((prev: any) => ({
@@ -61,16 +64,22 @@ function CreateInterviewDialogbox() {
           uploadFormData
         );
         console.log("API response:", res.data); // Add this log
-        
-        const resp = await saveInterviewQuestions({
+        if(res?.data?.status==429){
+          toast(res?.data?.message || "Rate limit exceeded. Please try again later.");
+          console.log(res?.data?.message || "Rate limit exceeded. Please try again later.");
+          return;
+        } 
+         
+        const interviewId = await saveInterviewQuestions({
           questions: res.data?.questions,
           userId: userDetail._id,
           resumeUrl: res.data?.uploadInfo?.url,
           jobTitle: formData?.jobTitle, // Use formData directly instead of res.data
           jobDescription: formData?.jobDescription, // Use formData directly instead of res.data
         });
-        console.log("Convex save response:", resp); // Add this log
-      } catch (err) {
+        router.push('/interview/' + interviewId); // Fixed: added slash
+        // console.log("Convex save response:", resp);  // Add this log
+      } catch (err) {  
          console.log("Error uploading file", err);
       } finally {
         setLoading(false);
