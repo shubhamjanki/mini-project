@@ -1,11 +1,16 @@
-import React from 'react'
+'use client'
+import React, { use } from 'react'
 import AppHeader from '../../_component/AppHeader'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ArrowRight, Send } from 'lucide-react'
-
+import { useParams } from 'next/navigation'
+import Link from 'next/link'
+import { api } from '@/convex/_generated/api' 
+import { useEffect } from 'react'
 function Interview() {
+  const { interviewid } = useParams();
   return (
     <>
       <div>
@@ -16,7 +21,9 @@ function Interview() {
         <div className='flex flex-col justify-center items-center pt-2 space-y-2 mb-10'>
           <h1 className='font-bold text-3xl text-center'>Ready to Start </h1>
           <p>The interview will begin shortly.</p>
-          <Button>Start Interview<ArrowRight/></Button>
+          <Link href={'/interview/'+interviewid+'/start'}>
+            <Button>Start Interview<ArrowRight/></Button>
+          </Link>
           <hr />
          <div className='flex bg-gray-100  p-4 rounded-lg flex-col space-y-4 items-center mt-4'>         
           <h2 className='font-semibold text-2xl'>Want to send interview link to someone?</h2>
